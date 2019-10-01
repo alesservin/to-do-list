@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+// import './App.css';
  // import List from '@material-ui/core/List';
  // import ListItem from '@material-ui/core/ListItem';
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
@@ -7,6 +7,10 @@ import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 // import Personas from './Servicios.js';
 
 // import PropTypes from 'prop-types';
+
+import Index from './components/Home.js';
+
+import About from './components/About.js';
 
 // class Links extends React.Component{
 //   render(){
@@ -38,23 +42,7 @@ import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 //   }
 // }
 
-function Index(){
-  return(
-          <>
-          <center>
-            <h1>Bienvenido/a a ToDo List.</h1>
-            <h2>Aquí encontrarás todos tus recordarios y alarmas para organizar
-            mejor tu día a día.</h2>
-          </center>
-          </>
-        );
-}
 
-function About(){
-  return <> <center><h2>Esta es una aplicación creada en React. La aplicación
-  ToDo List te permite anotar todas tus tareas por hacer, así como
-  crear recordatorios y alarmas. </h2></center></>
-}
 
 function Lists(){
   return <> <h1>Lista</h1></>
