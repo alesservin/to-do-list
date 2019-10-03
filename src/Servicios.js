@@ -32,7 +32,7 @@ class Personas extends React.Component{
       </List>
     )
   }
-
 }
+
 
 export default Personas;

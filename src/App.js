@@ -1,51 +1,26 @@
 import React from 'react';
-// import './App.css';
- // import List from '@material-ui/core/List';
- // import ListItem from '@material-ui/core/ListItem';
+import './App.css';
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
-// import axios from 'axios';
-// import Personas from './Servicios.js';
-
-// import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 import Index from './components/Home.js';
-
 import About from './components/About.js';
-
-// class Links extends React.Component{
-//   render(){
-//     return(
-//       <div>
-//         <nav>
-//           <ul>
-//             <li> <Link to="/">Home</Link></li>
-//             <li> <Link to="/about">About</Link></li>
-//             <li> <Link to="/users">Users</Link></li>
-//             <li> <Link to="/topics">Topics</Link></li>
-//           </ul>
-//         </nav>
-//       </div>
-//     );
-//   }
-// }
-
-// class Rutas extends React.Component{
-//   render(){
-//     return(
-//       <>
-//         <Route path="/" exact component={Index} />
-//         <Route path="/about" component={About} />
-//         <Route path="/users" component={Users} />
-//         <Route path="/topics" component={Topics} />
-//       </>
-//     );
-//   }
-// }
-
-
+import TablaTareas from './components/tasks/TaskList.js';
+import FormularioTareas from './components/tasks/TaskForm.js';
 
 function Lists(){
-  return <> <h1>Lista</h1></>
+  return (
+    <>
+      <h1>Lista</h1>
+      <center>
+        <Button variant="contained"> Hacer algo </Button>
+      </center>
+      <TablaTareas />
+      <FormularioTareas />
+    </>
+  );
 }
 
 function Topics({ match }) {
@@ -90,9 +65,11 @@ class Seccion extends React.Component{
     const { style } = this.props;
     return(
           // <div style={{float: 'left', width: '20%', border: '3px solid black'}}>
-          <div style={style}>
-            {this.props.contenido}
-          </div>
+          <Card  style={style}>
+            <CardContent>
+              {this.props.contenido}
+            </CardContent>
+          </Card >
 
     );
   }
@@ -109,7 +86,7 @@ class App extends React.Component{
           <li style={styleLi}> <Link to="/"><h1>Home</h1></Link></li>
           <li style={styleLi}> <Link to="/list"><h1>List</h1></Link></li>
           <li style={styleLi}> <Link to="/about"><h1>About</h1></Link></li>
-          <li style={styleLi}> <Link to="/topics"><h1>Topics</h1></Link></li>
+          {/*<li style={styleLi}> <Link to="/topics"><h1>Topics</h1></Link></li>*/}
         </ul>
       </center>
       </nav>     ;
@@ -125,20 +102,22 @@ class App extends React.Component{
 
     return (
       <>
-      <header style={{width: '99%', backgroundColor: 'blue', padding: '4px'
+      <Card style={{width: '99%', backgroundColor: 'blue', padding: '4px'
       , color: 'white'}}>
+      <header >
         <center>
           <h1>ToDo List</h1>
         </center>
       </header>
+      </Card>
 
       <Router>
         <Seccion name="sidebar" style={{float: 'left', width: '20%',
-        height:'500px', background: 'lightblue', marginTop: '1%'
+        height:'100%', background: 'lightblue', marginTop: '1%'
         , marginRight: '1%'}} contenido={contenidoSidebar} />
 
         <Seccion name="seccionPrincipal" style={{float: 'left', width: '77%'
-        , height:'500px', background: 'lightblue', marginTop: '10px'
+        , height:'100%', background: 'lightblue', marginTop: '10px'
         , marginRight: '1%',paddingLeft:'10px'}}
         contenido={contenidoPrincipal} />
       </Router>
