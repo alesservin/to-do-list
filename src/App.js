@@ -13,12 +13,11 @@ import FormularioTareas from './components/tasks/TaskForm.js';
 function Lists(){
   return (
     <>
-      <h1>Lista</h1>
+      <h1>Lista de tareas</h1>
       <center>
         <Button variant="contained"> Hacer algo </Button>
       </center>
       <TablaTareas />
-      <FormularioTareas />
     </>
   );
 }
@@ -59,6 +58,17 @@ function Topic({ match }) {
 
 }
 
+function Tasks({match}){
+  return(
+    <>
+      <Route exact path={`${match.path}/new`} component={FormularioTareas} />
+      <Route exact path={`${match.path}/edit/:idTask`}
+      component={FormularioTareas} />
+      <Route exact path={`${match.path}/`} component={TablaTareas} />
+    </>
+  );
+}
+
 
 class Seccion extends React.Component{
   render(){
@@ -84,7 +94,7 @@ class App extends React.Component{
       <center>
         <ul style={{listStyle: 'none'}}>
           <li style={styleLi}> <Link to="/"><h1>Home</h1></Link></li>
-          <li style={styleLi}> <Link to="/list"><h1>List</h1></Link></li>
+          <li style={styleLi}> <Link to="/tasks/"><h1>List</h1></Link></li>
           <li style={styleLi}> <Link to="/about"><h1>About</h1></Link></li>
           {/*<li style={styleLi}> <Link to="/topics"><h1>Topics</h1></Link></li>*/}
         </ul>
@@ -96,7 +106,7 @@ class App extends React.Component{
     <div>
       <Route path="/" exact component={Index} />
       <Route path="/about" component={About} />
-      <Route path="/list" component={Lists} />
+      <Route path="/tasks/" component={Lists} />
       <Route path="/topics" component={Topics} />
     </div>;
 
