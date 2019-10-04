@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -34,13 +35,47 @@ class SelectTarea extends React.Component{
 }
 
 class FormularioTareas extends React.Component{
+
+  state :{
+    nombre:'',
+    descripcion:'',
+
+  }
+
+  componentDidMount(){
+      const { match } = this.props;
+      const taskId = match.params.taskId;
+
+    //si existe el taskId, se obtiene el task por su idea
+    if (taskId) {
+      console.log('existe taskId; ' + match.params.taskId);
+      // se toma el taskId
+      axios.get('/ws/rest/tasks/' + taskId)
+        .then(res => {
+          const tareas = res.data; // se obtiene las tareas
+          this.setState({ rows: tareas,tasksQuantity:cantidadTareas });
+        })
+        .catch(err => {
+          console.log('Error');
+          console.log(err);
+        })
+    }
+  }
+
   render(){
+    const { match } = this.props;
     return(
       <>
         <Card>
           <CardContent>
             <form name="formTarea">
-            <center><h3>Agregar nueva tarea</h3></center>
+
+            <center>
+
+              <h3>
+                {match.params.taskId ? "Editar tarea"  : "Agregar nueva tarea"}
+              </h3>
+            </center>
               Nombre de la tarea: &nbsp;
               <TextField type="text" name="nombre" /> <br></br>
               Descripcion de la tarea: &nbsp;

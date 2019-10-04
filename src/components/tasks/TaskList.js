@@ -17,7 +17,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import Moment from 'react-moment';
-
+import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
 
 const actionsStyles = theme => ({
   root: {
@@ -177,14 +178,38 @@ class TablaTareas extends React.Component {
         console.log(err);
       })
 
+
+
   };
+
+  delete = id => {
+    // axios.delete('/ws/rest/tasks/' + id)
+    // .then(res => {
+    //   this.setState(this.state);
+    //   alert('Borrado con exito');
+    // })
+    // .catch(err => {
+    //   console.log('Error');
+    //   console.log(err);
+    // })
+
+this.setState(this.state);
+console.log(id);
+
+  }
 
   render() {
     const { classes } = this.props;
     const { rows, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const { match } = this.props;
 
     return (
+      <>
+      <center>
+        <Button variant="contained"> <Link to={`${match.path}/new`}> Nueva tarea </Link> </Button>
+      </center>
+
       <Paper className={classes.root}>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
@@ -193,7 +218,8 @@ class TablaTareas extends React.Component {
               <TableCell>Nombre</TableCell>
               <TableCell>Tipo</TableCell>
               <TableCell align="right">Descripcion</TableCell>
-                <TableCell align="right">Fecha límite</TableCell>
+              <TableCell align="right">Fecha límite</TableCell>
+              <TableCell align="right">Acciones</TableCell>
             </TableRow>
           </TableHead>
             <TableBody>
@@ -207,6 +233,13 @@ class TablaTareas extends React.Component {
                   <TableCell align="right">
                     <Moment format="DD/MM/YYYY HH:MM">{row.limitDate}</Moment>
                   </TableCell>
+                  <TableCell align="right">
+                    <Button variant="contained"
+                    onClick={ () => this.delete(row.id)}> Eliminar  </Button>
+                    <Button variant="contained">
+                    <Link to={`${match.path}/edit/${row.id}`}>Editar</Link> </Button>
+                  </TableCell>
+
                 </TableRow>
               ))
             }
@@ -237,6 +270,7 @@ class TablaTareas extends React.Component {
           </Table>
         </div>
       </Paper>
+      </>
     );
   }
 }

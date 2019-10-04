@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
@@ -10,17 +9,16 @@ import About from './components/About.js';
 import TablaTareas from './components/tasks/TaskList.js';
 import FormularioTareas from './components/tasks/TaskForm.js';
 
-function Lists(){
-  return (
-    <>
-      <h1>Lista de tareas</h1>
-      <center>
-        <Button variant="contained"> Hacer algo </Button>
-      </center>
-      <TablaTareas />
-    </>
-  );
-}
+// function Lists({match}){
+//   return (
+//     <>
+//       <h1>Lista de tareas</h1>
+//       <center>
+//       </center>
+//       <TablaTareas />
+//     </>
+//   );
+// }
 
 function Topics({ match }) {
   return (
@@ -62,9 +60,9 @@ function Tasks({match}){
   return(
     <>
       <Route exact path={`${match.path}/new`} component={FormularioTareas} />
-      <Route exact path={`${match.path}/edit/:idTask`}
+      <Route exact path={`${match.path}/edit/:taskId`}
       component={FormularioTareas} />
-      <Route exact path={`${match.path}/`} component={TablaTareas} />
+      <Route exact path={`${match.path}`} component={TablaTareas} />
     </>
   );
 }
@@ -94,7 +92,7 @@ class App extends React.Component{
       <center>
         <ul style={{listStyle: 'none'}}>
           <li style={styleLi}> <Link to="/"><h1>Home</h1></Link></li>
-          <li style={styleLi}> <Link to="/tasks/"><h1>List</h1></Link></li>
+          <li style={styleLi}> <Link to="/tasks"><h1>List</h1></Link></li>
           <li style={styleLi}> <Link to="/about"><h1>About</h1></Link></li>
           {/*<li style={styleLi}> <Link to="/topics"><h1>Topics</h1></Link></li>*/}
         </ul>
@@ -106,7 +104,7 @@ class App extends React.Component{
     <div>
       <Route path="/" exact component={Index} />
       <Route path="/about" component={About} />
-      <Route path="/tasks/" component={Lists} />
+      <Route path="/tasks" component={Tasks} />
       <Route path="/topics" component={Topics} />
     </div>;
 
