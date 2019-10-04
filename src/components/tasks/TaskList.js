@@ -100,10 +100,10 @@ const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: tru
 );
 
 let counter = 0;
-function createData(name, calories, fat) {
-  counter += 1;
-  return { id: counter, name, calories, fat };
-}
+// function createData(name, calories, fat) {
+//   counter += 1;
+//   return { id: counter, name, calories, fat };
+// }
 
 const styles = theme => ({
   root: {
@@ -177,24 +177,19 @@ class TablaTareas extends React.Component {
         console.log('Error');
         console.log(err);
       })
-
-
-
-  };
+    };
 
   delete = id => {
-    // axios.delete('/ws/rest/tasks/' + id)
-    // .then(res => {
-    //   this.setState(this.state);
-    //   alert('Borrado con exito');
-    // })
-    // .catch(err => {
-    //   console.log('Error');
-    //   console.log(err);
-    // })
-
-this.setState(this.state);
-console.log(id);
+    // se borra la tarea
+    axios.delete('/ws/rest/tasks/' + id)
+    .then(res => {
+      alert('Borrado con éxito');
+      this.setState(this.state);
+    })
+    .catch(err => {
+      console.log('Error');
+      console.log(err);
+    })
 
   }
 
