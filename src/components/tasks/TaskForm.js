@@ -13,57 +13,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
 
-class SelectTarea extends React.Component{
-  state = {
-    idTypeSelected:"",
-    tipos: [],
-  }
-
-  componentDidMount(){
-    //si se recibió el idType como propiedad, se toma
-    if (this.props.value) {
-      this.setState({idTypeSelected : this.props.value});
-    }
-
-    // se toman todos los tipos
-    axios.get('/ws/rest/types/')
-      .then(res => {
-        const tipos = res.data; // se obtiene las tareas
-        let vecTipos = tipos.map(tipo => (
-          { id: tipo.id, nombre: tipo.nombre }
-        ));
-
-        //se pasa el vector
-        this.setState({tipos:vecTipos}) ;
-      })
-      .catch(err => {
-        console.log('Error');
-        console.log(err);
-      })
-
-  }
-
-  handleChange = event => {
-    const id = event.target.value;
-    this.setState({ idTypeSelected: id });
-    alert(this.state.idTypeSelected);
-  };
-
-  render(){
-    return(
-      <Select value={this.state.idTypeSelected} onChange={this.handleChange}
-      displayEmpty name="type" style={{width:'150px'}}>
-        // se toman todos los tipos
-        { this.state.tipos.map(tipo =>(
-          <MenuItem value={tipo.id}>{tipo.nombre}</MenuItem>
-        ))
-        }
-      </Select>
-
-    );
-  }
-}
-
 class FormularioTareas extends React.Component{
 
   state = {
@@ -72,7 +21,7 @@ class FormularioTareas extends React.Component{
     description:'',
     idType: '',
     limitDate: '',
-
+    tipos: [],
   }
 
   componentDidMount(){
@@ -86,7 +35,7 @@ class FormularioTareas extends React.Component{
         .then(res => {
           const tarea = res.data; // se obtiene las tareas
           this.setState({ taskId: tarea.id, name: tarea.name
-            , description: tarea.description, id_type: tarea.idType
+            , description: tarea.description, idType: tarea.idType
           ,fechaLimite: tarea.limitDate });
         })
         .catch(err => {
@@ -94,6 +43,22 @@ class FormularioTareas extends React.Component{
           console.log(err);
         })
     }
+
+    // se toman todos los tipos de tareas
+    axios.get('/ws/rest/types/')
+      .then(res => {
+        const tipos = res.data; // se obtiene las tareas
+        let vecTipos = tipos.map(tipo => (
+          { id: tipo.id, nombre: tipo.nombre }
+        ));
+        //se pasa el vector
+        this.setState({tipos:vecTipos}) ;
+      })
+      .catch(err => {
+        console.log('Error');
+        console.log(err);
+      })
+
   }
 
   handleChange = date => {
@@ -102,34 +67,73 @@ class FormularioTareas extends React.Component{
     });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    //
-    // const user = {
-    //   name: this.state.name
-    // };
-    //
-    // axios.post(`https://jsonplaceholder.typicode.com/users`, { user })
-    //   .then(res => {
-    //     console.log(res);
-    //     console.log(res.data);
-    //   })
-    alert('nuevo');
-  }
+  handleChangeTxt = field => (e) => {
 
-  handleUpdate = event => {
-     event.preventDefault();
-    //
-    // const user = {
-    //   name: this.state.name
-    // };
-    //
-    // axios.post(`https://jsonplaceholder.typicode.com/users`, { user })
-    //   .then(res => {
-    //     console.log(res);
-    //     console.log(res.data);
-    //   })
-    alert('actualizar');
+    switch (field) {
+      case 'nombre':
+        this.setState({name: e.target.value});
+        break;
+      case 'descripcion':
+        this.setState({description: e.target.value});
+        break;
+      case 'tipo':
+        const id = e.target.value;
+        this.setState({ idType: id });
+        break;
+      case 'fechaLimite':
+        this.setState({limitDate: e.target.value});
+        break;
+      default:
+        break;
+
+    }
+
+  };
+
+  handleSubmit = event => {
+    const {match} = this.props;
+    let tipo = null ;
+    event.preventDefault(); // previene que se recargue la pagina
+
+    //se obtiene por medio de un servicio, el objeto task
+    axios.get('/ws/rest/types/' + this.state.idType)
+      .then(res => {
+        tipo = res.data; // se obtiene la tareas
+        console.log(tipo);
+      })
+      .catch(err => {
+        console.log('Error');
+        console.log(err);
+      })
+
+    // se existe tasksId
+    if (match.params.taskId) {
+      // se actualiza el registro
+        alert('nuevo registro');
+
+    }
+    else // si no hay taskId
+    {
+      // se guarda un nuevo registro
+      alert('nuevo registro');
+      const tareaNueva = {
+        name:this.state.name,
+        description:this.state.description,
+        type: tipo,
+        limitDate: this.state.limitDate,
+      };
+
+      axios.post('/ws/rest/tasks/', tareaNueva )
+        .then(res => {
+          console.log(res);
+          console.log(res.data);
+        })
+        .catch(err => {
+          console.log('Error');
+          console.log(err);
+        })
+    }
+
   }
 
   render(){
@@ -140,7 +144,7 @@ class FormularioTareas extends React.Component{
         <Card>
           <CardContent>
             <form name="formTarea"
-            onSubmit={match.params.taskId ? this.handleUpdate : this.handleSubmit }
+            onSubmit={this.handleSubmit }
             >
             <center>
               <h3>
@@ -148,15 +152,24 @@ class FormularioTareas extends React.Component{
               </h3>
             </center>
               Nombre de la tarea: &nbsp;
-              <TextField value={this.state.name} type="text" name="nombre" /> <br></br>
+              <TextField value={this.state.name} type="text" name="nombre"
+              onChange={this.handleChangeTxt('nombre')} /> <br></br>
               Descripcion de la tarea: &nbsp;
               <TextField value={this.state.descripcion} type="text" name="descripcion" /> <br></br>
               Tipo de tarea: &nbsp;
-              <SelectTarea value={this.state.idType} /> <br></br>
+              <Select value={this.state.idType}
+              onChange={this.handleChangeTxt('tipo')}
+              displayEmpty name="tipo" style={{width:'150px'}}>
+                // se toman todos los tipos
+                { this.state.tipos.map(tipo =>(
+                  <MenuItem value={tipo.id}>{tipo.nombre}</MenuItem>
+                ))
+                }
+              </Select> <br></br>
               Fecha limite:
               <DatePicker
               selected={this.state.limitDate}
-              onChange={this.handleChange}
+              onChange={this.handleChange} name="fechaLimite"
             />
             <br></br>
             <Button variant="contained"> <Link to='/tasks'>Cancelar
