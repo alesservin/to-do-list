@@ -183,7 +183,7 @@ class FormularioTareas extends React.Component{
               <Grid item xs={12}>
                 <Paper className={classes.paper} >
                   Nombre de la tarea: &nbsp;
-                  <TextField value={this.state.name} type="text" name="nombre"
+                  <TextField value={this.state.name} isRequired type="text" name="nombre"
                   onChange={this.handleChangeTxt('nombre')}
                   style={{width:'80%'}} /> <br></br>
                 </Paper>

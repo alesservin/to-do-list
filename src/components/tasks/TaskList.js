@@ -99,12 +99,6 @@ const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: tru
   TablePaginationActions,
 );
 
-
-// function createData(name, calories, fat) {
-//   counter += 1;
-//   return { id: counter, name, calories, fat };
-// }
-
 const styles = theme => ({
   root: {
     width: '100%',
@@ -127,7 +121,6 @@ class TablaTareas extends React.Component {
   };
 
   componentDidMount(){
-      // axios.get('/ws/rest/tasks/')
     axios.get('/ws/rest/tasks/paginationAndQuantity',
     {params: {page: this.state.page + 1,size: this.state.rowsPerPage}})
       .then(res => {
@@ -185,12 +178,12 @@ class TablaTareas extends React.Component {
     .then(res => {
       //volver a cargar la lista de tareas
       axios.get('/ws/rest/tasks/paginationAndQuantity',
-      {params: {page: 0,size: this.state.rowsPerPage}})
+      {params: {page: this.state.page ,size: this.state.rowsPerPage}})
         .then(res => {
           const tareas = res.data.tasks; // se obtiene las tareas
           const cantidadTareas = res.data.quantity; //tomar la cantidad de tareas
           this.setState({ rows: tareas,tasksQuantity:cantidadTareas });
-          alert(tareas + ' cantidad:' + cantidadTareas);
+          console.log(tareas + ' cantidad:' + cantidadTareas);
         })
         .catch(err => {
           console.log('Error');
