@@ -129,7 +129,6 @@ class FormularioTareas extends React.Component{
         // se existe tasksId, se actualiza o agrga un nuevvo registro
         if (match.params.taskId) {
             // SE ACTUALIZA EL REGISTRO
-            console.log(tareaNueva);
             axios.put('/ws/rest/tasks/' + match.params.taskId, tareaNueva )
               .then(response => {
                 // this.setState({ friends: response.data });

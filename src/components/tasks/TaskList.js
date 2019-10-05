@@ -19,6 +19,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import Moment from 'react-moment';
 import Button from '@material-ui/core/Button';
 import {Link} from 'react-router-dom';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const actionsStyles = theme => ({
   root: {
@@ -120,6 +121,7 @@ class TablaTareas extends React.Component {
     tasksQuantity: 0,
   };
 
+
   componentDidMount(){
     axios.get('/ws/rest/tasks/paginationAndQuantity',
     {params: {page: this.state.page + 1,size: this.state.rowsPerPage}})
@@ -170,7 +172,7 @@ class TablaTareas extends React.Component {
         console.log('Error');
         console.log(err);
       })
-    };
+    }
 
   delete = id => {
     // se borra la tarea
@@ -200,6 +202,28 @@ class TablaTareas extends React.Component {
 
   }
 
+  // handleChangeCheck = id => event => {
+  //   alert(event.target.checked),
+  //   // this.setState({ rows.done : event.target.checked }),
+  // }
+
+  handleChange = row => event => {
+    //se cambia el valor de done
+    row.done = event.target.checked;
+
+    axios.put('/ws/rest/tasks/' + row.id, row )
+      .then(response => {
+        // this.setState({ friends: response.data });
+        this.forceUpdate();
+
+      })
+      .catch(error => {
+        console.log(error);
+        alert('Error: no se ha podido actualizar el registro');
+      });
+    // this.setState({ [name]: event.target.checked });
+  };
+
   render() {
     const { classes } = this.props;
     const { rowsPerPage, page } = this.state;
@@ -210,7 +234,6 @@ class TablaTareas extends React.Component {
       <center>
         <Button variant="contained"> <Link to={`${match.path}/new`}> Nueva tarea </Link> </Button>
       </center>
-
       <Paper className={classes.root}>
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
@@ -220,6 +243,7 @@ class TablaTareas extends React.Component {
               <TableCell>Tipo</TableCell>
               <TableCell align="right">Descripcion</TableCell>
               <TableCell align="right">Fecha límite</TableCell>
+              <TableCell align="right">Realizado</TableCell>
               <TableCell align="right">Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -236,6 +260,17 @@ class TablaTareas extends React.Component {
                   <TableCell align="right">{row.description}</TableCell>
                   <TableCell align="right">
                     <Moment format="DD/MM/YYYY HH:MM">{row.limitDate}</Moment>
+                  </TableCell>
+                  <TableCell align="right">
+                  <Checkbox
+                    checked={row.done}
+                    onChange={this.handleChange(row)}
+                    value={row.done}
+                    color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
+                  />
                   </TableCell>
                   <TableCell align="right">
                     <Button variant="contained"
