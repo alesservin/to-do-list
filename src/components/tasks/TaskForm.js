@@ -8,7 +8,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Moment from 'moment';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -78,8 +78,9 @@ class FormularioTareas extends React.Component{
 
   handleChange = date => {
     this.setState({
-      limitDate: date
-    });
+      limitDate: date,
+    })
+
   };
 
   handleChangeTxt = field => (e) => {
@@ -113,7 +114,7 @@ class FormularioTareas extends React.Component{
       name:this.state.name,
       description:this.state.description,
       type: tipo,
-      limitDate: this.state.limitDate,
+      limitDate: moment(this.state.limitDate).format('YYYY-MM-DD'),
     };
 
     event.preventDefault(); // previene que se recargue la pagina
@@ -129,16 +130,16 @@ class FormularioTareas extends React.Component{
         if (match.params.taskId) {
             // SE ACTUALIZA EL REGISTRO
             console.log(tareaNueva);
-            // axios.put('/ws/rest/tasks/' + match.params.taskId, tareaNueva )
-            //   .then(response => {
-            //     // this.setState({ friends: response.data });
-            //     alert('Actualizado con éxito');
-            //
-            //   })
-            //   .catch(error => {
-            //     console.log(error);
-            //     alert('Error: no se ha podido actualizar el registro');
-            //   });
+            axios.put('/ws/rest/tasks/' + match.params.taskId, tareaNueva )
+              .then(response => {
+                // this.setState({ friends: response.data });
+                alert('Actualizado con éxito');
+
+              })
+              .catch(error => {
+                console.log(error);
+                alert('Error: no se ha podido actualizar el registro');
+              });
         }
         else // si no hay taskId
         {
@@ -198,8 +199,7 @@ class FormularioTareas extends React.Component{
               <Grid item xs={12}>
                 <Paper className={classes.paper} >
                   Tipo de tarea: &nbsp;
-                  <Select value={this.state.idType}
-                  onChange={this.handleChangeTxt('tipo')}
+                  <Select value={this.state.idType} onChange={this.handleChangeTxt('tipo')}
                   displayEmpty name="tipo" style={{width:'80%'}}>
                     // se toman todos los tipos
                     { this.state.tipos.map(tipo =>(

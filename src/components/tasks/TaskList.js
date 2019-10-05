@@ -24,7 +24,7 @@ const actionsStyles = theme => ({
   root: {
     flexShrink: 0,
     color: theme.palette.text.secondary,
-    marginLeft: theme.spacing.unit * 2.5,
+    marginLeft: theme.spacing(2.5),
   },
 });
 
@@ -99,7 +99,7 @@ const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: tru
   TablePaginationActions,
 );
 
-let counter = 0;
+
 // function createData(name, calories, fat) {
 //   counter += 1;
 //   return { id: counter, name, calories, fat };
@@ -108,7 +108,7 @@ let counter = 0;
 const styles = theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
   },
   table: {
     minWidth: 500,
@@ -183,8 +183,22 @@ class TablaTareas extends React.Component {
     // se borra la tarea
     axios.delete('/ws/rest/tasks/' + id)
     .then(res => {
+      //volver a cargar la lista de tareas
+      axios.get('/ws/rest/tasks/paginationAndQuantity',
+      {params: {page: 0,size: this.state.rowsPerPage}})
+        .then(res => {
+          const tareas = res.data.tasks; // se obtiene las tareas
+          const cantidadTareas = res.data.quantity; //tomar la cantidad de tareas
+          this.setState({ rows: tareas,tasksQuantity:cantidadTareas });
+          alert(tareas + ' cantidad:' + cantidadTareas);
+        })
+        .catch(err => {
+          console.log('Error');
+          console.log(err);
+        })
+
       alert('Borrado con éxito');
-      this.setState(this.state);
+
     })
     .catch(err => {
       console.log('Error');
@@ -195,8 +209,7 @@ class TablaTareas extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { rows, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const { rowsPerPage, page } = this.state;
     const { match } = this.props;
 
     return (
@@ -220,9 +233,12 @@ class TablaTareas extends React.Component {
             <TableBody>
             {this.state.rows.map(row => (
                 <TableRow key={row.id}>
-                  <TableCell component="th" scope="row"> {row.name} </TableCell>
                   <TableCell component="th" scope="row">
-                    {row.type.nombre}
+                  {row.name != null ? row.name : ''}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {/*imprimir el tipo de tarea, solo si existe*/}
+                    {row.type != null ? row.type.nombre : ''}
                   </TableCell>
                   <TableCell align="right">{row.description}</TableCell>
                   <TableCell align="right">
