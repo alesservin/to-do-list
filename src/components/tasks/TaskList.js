@@ -244,7 +244,7 @@ class TablaTareas extends React.Component {
               <TableCell align="right">Descripcion</TableCell>
               <TableCell align="right">Fecha límite</TableCell>
               <TableCell align="right">Realizado</TableCell>
-              <TableCell align="right">Acciones</TableCell>
+              <TableCell >Acciones</TableCell>
             </TableRow>
           </TableHead>
             <TableBody>
@@ -272,7 +272,7 @@ class TablaTareas extends React.Component {
                     }}
                   />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     <Button variant="contained"
                     onClick={ () => this.delete(row.id)}> Eliminar  </Button>
                     <Button variant="contained">
