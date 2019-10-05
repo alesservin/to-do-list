@@ -93,46 +93,57 @@ class FormularioTareas extends React.Component{
   handleSubmit = event => {
     const {match} = this.props;
     let tipo = null ;
+    let tareaNueva = {};
+    tareaNueva = {
+      name:this.state.name,
+      description:this.state.description,
+      type: tipo,
+      limitDate: this.state.limitDate,
+    };
+
     event.preventDefault(); // previene que se recargue la pagina
 
     //se obtiene por medio de un servicio, el objeto task
     axios.get('/ws/rest/types/' + this.state.idType)
       .then(res => {
-        tipo = res.data; // se obtiene la tareas
-        console.log(tipo);
+        tipo = {type: res.data}; // se obtiene la tarea
+        // se reemplaza el tipo anterior(en null), con el actual
+        tareaNueva = Object.assign(tareaNueva,tipo);
+        console.log(tareaNueva);
+
+        // se existe tasksId, se actualiza o agrga un nuevvo registro
+        if (match.params.taskId) {
+            // SE ACTUALIZA EL REGISTRO
+            axios.put('/ws/rest/tasks/' + match.params.taskId, tareaNueva )
+              .then(response => {
+                // this.setState({ friends: response.data });
+                alert('Actualizado con éxito');
+
+              })
+              .catch(error => {
+                console.log(error);
+                alert('Error: no se ha podido actualizar el registro');
+              });
+        }
+        else // si no hay taskId
+        {
+          // SE GUARDA UN NUEVOO REGISTRO
+          axios.post('/ws/rest/tasks/', tareaNueva )
+            .then(res => {
+              alert('Registrado con éxito');
+
+            })
+            .catch(err => {
+              console.log('Error');
+              console.log(err);
+              alert('Ha ocurrido un error y no se ha podido guardar el registro');
+            })
+        }
       })
       .catch(err => {
         console.log('Error');
         console.log(err);
       })
-
-    // se existe tasksId
-    if (match.params.taskId) {
-      // se actualiza el registro
-        alert('nuevo registro');
-
-    }
-    else // si no hay taskId
-    {
-      // se guarda un nuevo registro
-      alert('nuevo registro');
-      const tareaNueva = {
-        name:this.state.name,
-        description:this.state.description,
-        type: tipo,
-        limitDate: this.state.limitDate,
-      };
-
-      axios.post('/ws/rest/tasks/', tareaNueva )
-        .then(res => {
-          console.log(res);
-          console.log(res.data);
-        })
-        .catch(err => {
-          console.log('Error');
-          console.log(err);
-        })
-    }
 
   }
 
@@ -155,7 +166,8 @@ class FormularioTareas extends React.Component{
               <TextField value={this.state.name} type="text" name="nombre"
               onChange={this.handleChangeTxt('nombre')} /> <br></br>
               Descripcion de la tarea: &nbsp;
-              <TextField value={this.state.descripcion} type="text" name="descripcion" /> <br></br>
+              <TextField value={this.state.description} type="text" name="descripcion"
+              onChange={this.handleChangeTxt('descripcion')} /> <br></br>
               Tipo de tarea: &nbsp;
               <Select value={this.state.idType}
               onChange={this.handleChangeTxt('tipo')}
@@ -168,7 +180,8 @@ class FormularioTareas extends React.Component{
               </Select> <br></br>
               Fecha limite:
               <DatePicker
-              selected={this.state.limitDate}
+              selected={<Moment format="MM/DD/YYYY">{this.state.limitDate}
+              </Moment>}
               onChange={this.handleChange} name="fechaLimite"
             />
             <br></br>
